@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-<title>Thymeleaf 基本編</title>
+<title>Thymeleaf 応用編</title>
 <style>
 h1 {font-size: 2rem; border-bottom: solid 3px #4caf93;}
 h2 {font-size: 1.6rem; border-bottom: solid 1px #4caf93;}
@@ -17,5 +17,171 @@ table th, td {padding: 5px;}
 	<h2>1.記述方法</h2>
 	<h3>(1)変数式（${...}）</h3>
 		<p th:text="${msg}"></p>
+
+
+
+	<h3>(2)選択変数式（*{...}）</h3>
+		<p>・選択変数式で記述</p>
+		<table th:object="${object}">
+			<tr>
+				<th>ID</th>
+				<td th:text="*{id}"></td>
+			</tr>
+			<tr>
+				<th>NAME</th>
+				<td th:text="*{name}"></td>
+			</tr>
+			<tr>
+				<th>WEB</th>
+				<td th:text="*{value}"></td>
+			</tr>
+		</table>
+		<p>・変数式で記述</p>
+		<table>
+			<tr>
+				<th>ID</th>
+				<td th:text="${object.id}"></td>
+			</tr>
+			<tr>
+				<th>NAME</th>
+				<td th:text="${object.name}"></td>
+			</tr>
+			<tr>
+				<th>WEB</th>
+				<td th:text="${object.value}"></td>
+			</tr>
+		</table>
+
+	<h3>(3)メッセージ式（#{...}）</h3>
+		<p th:text="#{content.msg}">messages_ja.propertiesより</p>
+
+	<h3>(4)リンク式（@{...}）</h3>
+		<p><a th:href="@{/01}">リンクを指定するもの（生成されるURL「/01」）</a></p>
+		<p><a th:href="@{/01(id=${object.id})}">パラメータを指定してみる（生成されるURL「/01?id=123」）</a></p>
+		<p><a th:href="@{/01/{id}/(id=${object.id}, rdr=${object.value})}">変数式を指定してみる（生成されるURL「/01/123/?rdr=https://www.marineroad.com/」）</a></p>
+
+	<h2>2.制御文</h2>
+	<h3>(1)繰り返し（th:each）</h3>
+		<p>th:each="コレクションから取り出した要素の変数名 : ${コレクションの変数名}</p>
+		<table>
+			<tr>
+				<th>ID</th>
+				<th>NAME</th>
+				<th>WEB</th>
+			</tr>
+			<tr th:each="object:${dataList}" th:object="${object}">
+				<td th:text="*{id}"></td>
+				<td th:text="*{name}"></td>
+				<td th:text="*{value}"></td>
+			</tr>
+		</table>
+
+	<h3>(2)条件式（th:if、th:unless）</h3>
+		<table th:if="${dataList} != null">
+			<tr>
+				<th>ID</th>
+				<th>NAME</th>
+				<th>WEB</th>
+			</tr>
+			<tr th:each="object:${dataList}" th:object="${object}">
+				<td th:text="*{id}"></td>
+				<td th:text="*{name}" th:if="*{id} gt 1"></td>
+				<td th:text="*{name}" th:unless="*{id} gt 1" style="font-weight: bold;"></td>
+				<td th:text="*{value}"></td>
+			</tr>
+		</table>
+		<p th:unless="${dataList} != null">データがありません</p>
+		<br />
+		<table>
+			<tr>
+				<th>Javaの演算子</th>
+				<th>Thymeleafの演算子</th>
+			</tr>
+			<tr>
+				<td>&gt;</td>
+				<td>gt</td>
+			</tr>
+			<tr>
+				<td>&lt;</td>
+				<td>lt</td>
+			</tr>
+			<tr>
+				<td>&gt;=</td>
+				<td>ge</td>
+			</tr>
+			<tr>
+				<td>&lt;=</td>
+				<td>le</td>
+			</tr>
+			<tr>
+				<td>!</td>
+				<td>not</td>
+			</tr>
+			<tr>
+				<td>==</td>
+				<td>eq</td>
+			</tr>
+			<tr>
+				<td>!=</td>
+				<td>neq</td>
+			</tr>
+			<tr>
+				<td>&amp;&amp;</td>
+				<td>and</td>
+			</tr>
+			<tr>
+				<td>||</td>
+				<td>or</td>
+			</tr>
+		</table>
+
+	<h2>3.その他</h2>
+	<h3>(1)ユーティリティオブジェクト（#...）</h3>
+		<p><a th:href="@{'http://www.thymeleaf.org/apidocs/thymeleaf/2.1.4.RELEASE/org/thymeleaf/expression/package-summary.html'}" target="_blank">ユーティリティメソッドリファレンス</a></p>
+		<table>
+			<tr>
+				<th>#dates</th><td>java.util.Date用のユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#calendars</th><td>java.util.Calendar用のユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#numbers</th><td>数値オブジェクト用のユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#strings</th><td>Stringオブジェクト用のユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#objects</th><td>オブジェクト一般のユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#bools</th><td>真偽値用のユーティリティメソッド</td>
+			</tr>
+			<tr>
+				<th>#arrays</th><td>配列用のユーティリティメソッド</td>
+			</tr>
+			<tr>
+				<th>#lists</th><td>リスト用のユーティリティメソッド</td>
+			</tr>
+			<tr>
+				<th>#sets</th><td>セット用のユーティリティメソッド</td>
+			</tr>
+			<tr>
+				<th>#maps</th><td>マップ用のユーティリティメソッド</td>
+			</tr>
+			<tr>
+				<th>#aggregates</th><td>コレクション処理用ユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#messages</th><td>外部からのメッセージを取り扱うためのユーティリティ</td>
+			</tr>
+			<tr>
+				<th>#ids</th><td>繰り返しでid属性を扱うためのユーティリティ</td>
+			</tr>
+		</table>
+		<br />
+		<p th:text="${#strings.toUpperCase('Utility Object #strings')}"></p>
+		<p th:text="${#calendars.format(#calendars.createNow(),'yyyy年MM月dd日')}" />
+		<p th:if="${#lists.isEmpty(dataList1)}">データがありません#lists</p>
 </body>
 </html>
